@@ -1,0 +1,11 @@
+services:
+  - type: worker
+    name: telegram-groq-bot
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python ai_bot.py"
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        fromEnvVar: TELEGRAM_BOT_TOKEN
+      - key: GROQ_API_KEY
+        fromEnvVar: GROQ_API_KEY
