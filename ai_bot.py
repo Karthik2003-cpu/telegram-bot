@@ -22,7 +22,7 @@ async def ai_reply(prompt: str) -> str:
                 "Content-Type": "application/json"
             },
             json={
-                "model": "llama3-8b-8192",  # or use llama3-70b-8192 if available
+                "model": "openai/gpt-oss-20b",
                 "messages": [
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt}
@@ -31,9 +31,19 @@ async def ai_reply(prompt: str) -> str:
             }
         )
         data = response.json()
-        return data['choices'][0]['message']['content']
+
+        # Debug log
+        print("Groq API response:", data)
+
+        if "choices" in data:
+            return data["choices"][0]["message"]["content"]
+        elif "error" in data:
+            return f"Groq API Error: {data['error'].get('message', 'Unknown error')}"
+        else:
+            return f"Unexpected response: {data}"
     except Exception as e:
         return f"Error: {str(e)}"
+
 
 # Handle Telegram messages
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
